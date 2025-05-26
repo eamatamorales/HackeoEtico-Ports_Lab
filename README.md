@@ -32,6 +32,30 @@ Los escáneres como `nmap` permiten detectar qué puertos están abiertos y qué
 
 Estas definiciones te ayudarán a comprender mejor lo que estás viendo en Wireshark o nmap, y tomar decisiones informadas durante el análisis.
 
+---
+
+## Glosario de técnicas evasivas
+
+### Escaneos furtivos (FIN, NULL, Xmas)
+Estas técnicas son utilizadas para evadir firewalls o sistemas de detección de intrusos (IDS) al enviar paquetes no convencionales que podrían no ser registrados como escaneos por los sistemas defensivos:
+
+- **FIN scan (`-sF`)**: Envía paquetes con solo el flag FIN activo. En sistemas que siguen el RFC, una falta de respuesta indica que el puerto está abierto. Muy útil para evadir firewalls básicos.
+- **NULL scan (`-sN`)**: Envía paquetes sin ningún flag activado. La ausencia de respuesta también puede interpretarse como un puerto abierto.
+- **Xmas scan (`-sX`)**: Enciende los flags FIN, URG y PSH al mismo tiempo (como un árbol de navidad encendido). Igual que el NULL scan, depende del sistema operativo cómo se comporta.
+
+### IP Decoy (`-D`)
+Permite enviar paquetes que aparentan provenir de múltiples IPs al mismo tiempo. Esto confunde al administrador o los registros de IDS, ocultando cuál es la IP real del atacante. Ejemplo:
+```bash
+nmap -D RND:10 $OBJETIVO
+```
+
+### Fragmentación (`-f`)
+Divide los paquetes del escaneo en fragmentos pequeños para evadir inspecciones profundas. Esto puede evitar la detección si un firewall solo analiza encabezados y no el tráfico completo. Ejemplo:
+```bash
+nmap -f $OBJETIVO
+```
+
+---
 
 Este documento contiene 3 laboratorios progresivos para enseñar escaneo de red, evasiones y análisis de sistema operativo utilizando herramientas de red reales.
 
